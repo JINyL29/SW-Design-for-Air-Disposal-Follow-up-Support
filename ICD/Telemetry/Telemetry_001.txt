@@ -1,0 +1,51 @@
+[Component Information]
+
+Component Name : UniRC 7 Pro
+Component ID   : telemetry_001
+
+--------------------------------------------------
+
+[Monitoring Parameter]
+
+Parameter Name : Input Voltage
+Unit           : V
+
+Normal Range   : 12 ~ 76 V
+Warning Range  : 11.0 ~ 11.9
+Critical Range : < 11.0
+Critical Range : > 76 V
+--------------------------------------------------
+
+[Fault Condition]
+
+Condition 1 :
+IF voltage < 11.9
+
+Fault State :
+Under-voltage
+
+Fault Code :
+telemetry_UV_001
+
+Severity :
+HIGH
+
+Maintenance Action :
+Check BEC output voltage 
+
+--------------------------------------------------
+
+Condition 2 :
+IF voltage > 76 V
+
+Fault State :
+Over-voltage 
+
+Fault Code :
+telemetry_OV_001
+
+Severity :
+HIGH
+
+Maintenance Action :
+Check BEC output voltage 
