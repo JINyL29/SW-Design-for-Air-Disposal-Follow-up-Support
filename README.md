@@ -19,6 +19,9 @@ The software provides a maintenance dashboard UI that allows users to:
 
 ## System Architecture
 
+<img width="1095" height="559" alt="KakaoTalk_20260429_133204776" src="https://github.com/user-attachments/assets/7c751f8c-7ea1-4ad6-bd7a-8d00fe0a8174" />
+
+
 The proposed system consists of three main stages:
 
 ### Input
