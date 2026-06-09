@@ -1,0 +1,84 @@
+{
+  "components": [
+    {
+      "id": "BAT",
+      "name": "Battery",
+      "model_name": "폴리트로닉스 HYBRID PT-B39000-SS-12S",
+      "normal_min": 40.0,
+      "normal_max": 51.8,
+      "critical_low": 38.0,
+      "has_ov_critical": true,
+      "priority": 1
+    },
+    {
+      "id": "ESC",
+      "name": "ESC",
+      "model_name": "Xrotor X6 Plus",
+      "normal_min": 44.4,
+      "normal_max": 51.8,
+      "critical_low": 40.0,
+      "has_ov_critical": false,
+      "priority": 2
+    },
+    {
+      "id": "FC",
+      "name": "FC",
+      "model_name": "CUAV Pixhawk V6X V2",
+      "normal_min": 4.75,
+      "normal_max": 5.45,
+      "critical_low": 4.50,
+      "has_ov_critical": true,
+      "priority": 3
+    },
+    {
+      "id": "GPS",
+      "name": "GPS",
+      "model_name": "MG-F10",
+      "normal_min": 4.75,
+      "normal_max": 5.25,
+      "critical_low": 4.50,
+      "has_ov_critical": true,
+      "priority": 4
+    },
+    {
+      "id": "TEL",
+      "name": "Telemetry",
+      "model_name": "UNIRC7 PRO",
+      "normal_min": 12.0,
+      "normal_max": 76.0,
+      "critical_low": 11.0,
+      "has_ov_critical": true,
+      "priority": 5
+    },
+    {
+      "id": "BEC",
+      "name": "BEC",
+      "model_name": "Pixhawk Ammeter Power Module",
+      "normal_min": 11.8,
+      "normal_max": 12.8,
+      "critical_low": 11.0,
+      "has_ov_critical": false,
+      "priority": 6
+    },
+    {
+      "id": "CAM",
+      "name": "CAM",
+      "model_name": "A8 Gimbal",
+      "normal_min": 11.1,
+      "normal_max": 22.2,
+      "critical_low": 10.0,
+      "has_ov_critical": true,
+      "priority": 7
+    },
+    {
+      "id": "MOT",
+      "name": "Motor",
+      "model_name": "Xrotor X6 Plus Motor set",
+      "normal_min": 44.4,
+      "normal_max": 51.8,
+      "critical_low": 40.0,
+      "has_ov_critical": false,
+      "priority": 8
+    }
+  ]
+}
