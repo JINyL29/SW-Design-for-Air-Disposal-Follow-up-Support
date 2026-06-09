@@ -1,0 +1,51 @@
+[Component Information]
+
+Component Name : A8 camera
+Component ID   : Camera_001
+
+--------------------------------------------------
+
+[Monitoring Parameter]
+
+Parameter Name : Input Voltage
+Unit           : V
+
+Normal Range   : 11.1 ~ 22.2
+Warning Range  : 10.0 ~ 11.0
+Critical Range : < 10.0
+Critical Range : > 22.2
+--------------------------------------------------
+
+[Fault Condition]
+
+Condition 1 :
+IF voltage < 11.1
+
+Fault State :
+Under-voltage
+
+Fault Code :
+Cam_UV_001
+
+Severity :
+HIGH
+
+Maintenance Action :
+Check BEC output voltage 
+
+--------------------------------------------------
+
+Condition 2 :
+IF voltage > 22.2
+
+Fault State :
+Over-voltage 
+
+Fault Code :
+Cam_OV_001
+
+Severity :
+HIGH
+
+Maintenance Action :
+Check BEC output voltage 
