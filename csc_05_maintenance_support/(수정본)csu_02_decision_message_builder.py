@@ -2,18 +2,32 @@
 from models.diagnosis_result import DiagnosisResult, VoltageState, Severity
 
 # ── 배선도 토폴로지 영향 맵 ────────────────────────────────────────────────────
-# dashboard_wiring_scene.py의 EDGES 리스트 기반
-# 실선(dashed=False) → 직접 전력 공급 영향
-# 점선(dashed=True)  → 신호(PWM/UART) 영향
-_DIRECT_IMPACT = {
+# 실선(전력선) 기준 양방향 영향 맵
+#
+# upstream  : 나에게 전력을 주는 쪽 → 고장 원인일 수 있으므로 확인
+# downstream: 내가 전력을 주는 쪽  → 내 이상으로 피해받으므로 확인
+#
+# 배선도 실선 엣지:
+#   BAT → PDB → ESC
+#              → BEC → FC  → GPS
+#                    → TEL
+#                    → CAM
+
+_UPSTREAM_IMPACT = {
+    "PDB": ["BAT"],
+    "BEC": ["PDB"],
+    "ESC": ["PDB"],
+    "FC":  ["BEC"],
+    "TEL": ["BEC"],
+    "CAM": ["BEC"],
+    "GPS": ["FC"],
+}
+
+_DOWNSTREAM_IMPACT = {
     "BAT": ["PDB"],
     "PDB": ["ESC", "BEC"],
     "BEC": ["FC", "TEL", "CAM"],
     "FC":  ["GPS"],
-}
-_SIGNAL_IMPACT = {
-    "ESC": ["MOT"],
-    "FC":  ["TEL", "ESC"],
 }
 
 _STATE_KO = {
@@ -70,17 +84,16 @@ class DecisionMessageBuilder:
             return ""
 
         cid = result.component_id
-        parts = []
+        upstream   = _UPSTREAM_IMPACT.get(cid, [])
+        downstream = _DOWNSTREAM_IMPACT.get(cid, [])
 
-        direct = _DIRECT_IMPACT.get(cid, [])
-        if direct:
-            parts.append(f"직접 영향: {', '.join(direct)} 전압 확인 필요")
-
-        signal = _SIGNAL_IMPACT.get(cid, [])
-        if signal:
-            parts.append(f"신호 영향: {', '.join(signal)} 동작 확인 필요")
-
-        if not parts:
+        if not upstream and not downstream:
             return ""
+
+        parts = []
+        if upstream:
+            parts.append(f"전력 공급원 확인 필요: {chr(44).join(upstream)}")
+        if downstream:
+            parts.append(f"영향 부품 확인 필요: {chr(44).join(downstream)}")
 
         return f"⚠ {cid} 이상 감지 → " + " | ".join(parts)
