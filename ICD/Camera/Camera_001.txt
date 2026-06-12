@@ -31,8 +31,7 @@ Severity :
 HIGH
 
 Maintenance Action :
-Check BEC output voltage 
-
+Check BEC output voltage, 16 AWG, XT30
 --------------------------------------------------
 
 Condition 2 :
@@ -48,4 +47,4 @@ Severity :
 HIGH
 
 Maintenance Action :
-Check BEC output voltage 
+Check BEC output voltage, 16 AWG, XT30
