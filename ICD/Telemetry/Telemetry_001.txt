@@ -31,7 +31,7 @@ Severity :
 HIGH
 
 Maintenance Action :
-Check BEC output voltage 
+Check BEC output voltage. Check 16 AWG, XT30
 
 --------------------------------------------------
 
@@ -47,5 +47,4 @@ telemetry_OV_001
 Severity :
 HIGH
 
-Maintenance Action :
-Check BEC output voltage 
+Maintenance Action :Check BEC output voltage. Check 16 AWG, XT30
