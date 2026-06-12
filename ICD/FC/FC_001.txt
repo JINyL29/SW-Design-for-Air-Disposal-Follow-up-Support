@@ -22,7 +22,7 @@ Fault State : Under-voltage
 Fault Code : FC_UV_001
 Severity : HIGH
 Maintenance Action : 
-Check BEC output voltage 
+Check BEC output voltage, 24 AWG, GH1.25
 
 --------------------------------------------------
 
@@ -32,4 +32,4 @@ Fault State : Over-voltage
 Fault Code : FC_OV_001
 Severity : HIGH
 Maintenance Action :
-Inspect voltage regulator output
+Inspect voltage regulator output, 24 AWG, GH1.25
