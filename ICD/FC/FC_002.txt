@@ -1,0 +1,35 @@
+[Component Information]
+Component Name : CubePilot Cube Orange+
+Component ID : FC_002
+
+--------------------------------------------------
+
+[Monitoring Parameter]
+Parameter Name : Input Voltage
+Unit : V
+Normal Range 4.75 ~ 5.45
+Warning Range 4.50 ~ 4.74
+Critical Range < 4.50
+USB Input Voltage 4.75 ~ 5.25V
+Maximum input voltage 6V
+
+--------------------------------------------------
+
+[Fault Condition]
+Condition 1 :
+IF voltage < 4.75
+Fault State : Under-voltage
+Fault Code : FC_UV_002
+Severity : HIGH
+Maintenance Action : 
+Check BEC output voltage, 24 AWG, GH1.25
+
+--------------------------------------------------
+
+Condition 2 :
+IF voltage > 5.25
+Fault State : Over-voltage
+Fault Code : FC_OV_002
+Severity : HIGH
+Maintenance Action :
+Inspect voltage regulator output, 24 AWG, GH1.25
