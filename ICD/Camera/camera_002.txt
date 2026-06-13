@@ -1,0 +1,51 @@
+[Component Information]
+
+Component Name : SIYI ZT6 mini
+Component ID   : Camera_002
+
+--------------------------------------------------
+
+[Monitoring Parameter]
+
+Parameter Name : Input Voltage
+Unit           : V
+
+Normal Range   : 11.1 ~ 22.1
+Warning Range  : 10.0 ~ 11.0
+Critical Range : < 10.0
+Critical Range : > 22.2
+--------------------------------------------------
+
+[Fault Condition]
+
+Condition 1 :
+IF voltage < 11.1
+
+Fault State :
+Under-voltage
+
+Fault Code :
+Cam_UV_002
+
+Severity :
+HIGH
+
+Maintenance Action :
+Check BEC output voltage, 16 AWG, XT30
+
+--------------------------------------------------
+
+Condition 2 :
+IF voltage > 22.2
+
+Fault State :
+Over-voltage 
+
+Fault Code :
+Cam_OV_002
+
+Severity :
+HIGH
+
+Maintenance Action :
+Check BEC output voltage, 16 AWG, XT30
