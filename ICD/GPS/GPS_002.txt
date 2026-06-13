@@ -1,0 +1,28 @@
+[Component Information]
+Component Name : Holybro H-RTK
+Component ID : GPS_002
+--------------------------------------------------
+
+[Monitoring Parameter]
+Parameter Name : Input Voltage
+Unit : V
+Normal Range : 4.75 ~ 5.25
+Warning Range : 4.50 ~ 4.74
+Critical Range : < 4.50
+
+--------------------------------------------------
+
+[Fault Condition]
+Condition 1 : IF voltage < 4.75
+Fault State : Under-voltage
+Fault Code : GPS_UV_002
+Severity : MEDIUM
+Maintenance Action :
+Check FC GPS port voltage, GPS power cable connection, and voltage drop between FC and GPS module. Check 24 AWG, GH1.25
+--------------------------------------------------
+Condition 2 : IF voltage > 5.25
+Fault State : Over-voltage
+Fault Code : GPS_OV_002
+Severity : HIGH
+Maintenance Action :
+Inspect FC GPS port output, power regulator stability, and wiring connection error. Check 24 AWG, GH1.25
