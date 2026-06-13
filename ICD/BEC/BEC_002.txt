@@ -1,0 +1,33 @@
+[Component Information]
+Component Name : Hobbywing UBEC
+Component ID : BEC_002
+
+--------------------------------------------------
+
+[Monitoring Parameter]
+Parameter Name : Input Voltage
+Unit : V
+Normal Range 9 ~ 80
+Warning Range 8 ~ 8.9
+Critical Range < 8
+
+--------------------------------------------------
+
+[Fault Condition]
+Condition 1 :
+IF voltage < 8
+Fault State : Under-voltage
+Fault Code : BEC_UV_002
+Severity : HIGH
+Maintenance Action : 
+Check Bettery sell output voltage. Check 14 AWG, XT90
+
+--------------------------------------------------
+
+Condition 2 :
+IF voltage > 80
+Fault State : Over-voltage
+Fault Code : BEC_OV_002
+Severity : HIGH
+Maintenance Action :
+Check Bettery sell output voltage. Check 14 AWG, XT90
