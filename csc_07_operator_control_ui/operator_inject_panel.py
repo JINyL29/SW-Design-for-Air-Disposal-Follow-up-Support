@@ -111,13 +111,15 @@ class OperatorInjectPanel(QWidget):
         self._prev_code   = _preview_card("고장 코드",  "—", "#F4F3EF", "#667085")
         self._prev_sev    = _preview_card("심각도",     "—", "#F4F3EF", "#667085")
         self._prev_dev    = _preview_card("편차 (%)",   "—", "#F4F3EF", "#667085")
+        self._prev_wire   = _preview_card("전선 규격",  "—", "#F4F3EF", "#667085")
 
-        for card in [self._prev_state, self._prev_code, self._prev_sev, self._prev_dev]:
+        for card in [self._prev_state, self._prev_code, self._prev_sev,
+                     self._prev_dev, self._prev_wire]:
             lay.addWidget(card)
 
         lay.addStretch()
 
-    def update_preview(self, result: DiagnosisResult, deviation_pct: Optional[float] = None):
+    def update_preview(self, result: DiagnosisResult, deviation_pct: Optional[float] = None, fault_code_obj=None):
         state_txt = _STATE_KO.get(result.state, result.state.value)
         sev_bg, sev_fg = _SEV_COLORS.get(result.severity, ("#F4F3EF", "#667085"))
         volt = (f"{result.current_voltage:.2f} V" if result.current_voltage is not None else "N/A")
@@ -139,6 +141,21 @@ class OperatorInjectPanel(QWidget):
         dev_str = f"{deviation_pct:+.1f}%" if deviation_pct is not None else "—"
         self._replace_card(self._prev_dev, "편차 (%)", dev_str, "#F4F3EF", "#344054")
 
+        if fault_code_obj and (fault_code_obj.awg or fault_code_obj.connector):
+            wire_parts = []
+            if fault_code_obj.awg:
+                wire_parts.append(fault_code_obj.awg)
+            if fault_code_obj.connector:
+                wire_parts.append(fault_code_obj.connector)
+            if fault_code_obj.connector_rated_current:
+                wire_parts.append(fault_code_obj.connector_rated_current)
+            wire_str = "  /  ".join(wire_parts)
+            wire_bg, wire_fg = "#E6F1FB", "#185FA5"
+        else:
+            wire_str = "정보 없음"
+            wire_bg, wire_fg = "#F4F3EF", "#667085"
+        self._replace_card(self._prev_wire, "전선 규격", wire_str, wire_bg, wire_fg)
+
     def _replace_card(self, old: QFrame, title: str, value: str, bg: str, fg: str):
         lay = self.layout()
         idx = lay.indexOf(old)
@@ -156,6 +173,8 @@ class OperatorInjectPanel(QWidget):
             self._prev_sev = new
         elif old is self._prev_dev:
             self._prev_dev = new
+        elif old is self._prev_wire:
+            self._prev_wire = new
 
     def reset_preview(self):
         titles = {
@@ -163,6 +182,7 @@ class OperatorInjectPanel(QWidget):
             "_prev_code":  "고장 코드",
             "_prev_sev":   "심각도",
             "_prev_dev":   "편차 (%)",
+            "_prev_wire":  "전선 규격",
         }
         for attr, title in titles.items():
             old = getattr(self, attr)

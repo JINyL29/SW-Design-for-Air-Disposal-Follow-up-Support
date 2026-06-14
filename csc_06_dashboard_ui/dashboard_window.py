@@ -8,6 +8,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Slot
 from models.diagnosis_result import DiagnosisResult, VoltageState, Severity
 from csc_01_component_db.csu_01_component_data_loader import get_component_loader
+from csc_04_fault_code_generator.csu_01_fault_code_mapper import FaultCodeMapper
 from csc_06_dashboard_ui.dashboard_wiring_scene import DashboardWiringWidget
 from csc_06_dashboard_ui.dashboard_table_widget import DashboardTableWidget
 from csc_06_dashboard_ui.dashboard_log_widget import DashboardLogWidget
@@ -25,6 +26,11 @@ _SEV_COLORS = {
     Severity.HIGH:     "#BA7517",
     Severity.MEDIUM:   "#378ADD",
     Severity.LOW:      "#639922",
+}
+_CONNECTOR_COLORS = {
+    "XT90":   ("#FCEBEB", "#E24B4A"),
+    "XT30":   ("#FAEEDA", "#854F0B"),
+    "GH1.25": ("#E6F1FB", "#185FA5"),
 }
 
 
@@ -55,6 +61,7 @@ class DashboardWindow(QMainWindow):
         self._results: Dict[str, DiagnosisResult] = {}
         self._result_times: Dict[str, str] = {}
         self._active_filter: Optional[Severity] = None
+        self._fault_mapper = FaultCodeMapper()
         self.setWindowTitle("드론 전기 계통 진단 대시보드")
         self.setMinimumSize(1280, 720)
         self.resize(1600, 900)
@@ -91,6 +98,52 @@ class DashboardWindow(QMainWindow):
         title_row_lay.addStretch()
         title_row_lay.addWidget(self._last_diag_lbl)
         outer.addWidget(title_row)
+
+        # Alert banner (hidden until a fault is detected)
+        self._alert_banner = QFrame()
+        self._alert_banner.setVisible(False)
+        self._alert_banner.setFixedHeight(46)
+        alert_lay = QHBoxLayout(self._alert_banner)
+        alert_lay.setContentsMargins(14, 0, 14, 0)
+        alert_lay.setSpacing(10)
+
+        self._alert_dot = QLabel("●")
+        self._alert_dot.setStyleSheet("font-size:18px; font-weight:700; border:none;")
+        self._alert_sev_badge = QLabel("")
+        self._alert_sev_badge.setStyleSheet(
+            "font-size:11px; font-weight:700; color:#FFFFFF;"
+            " border-radius:4px; padding:3px 10px; border:none;"
+        )
+        self._alert_msg = QLabel("")
+        self._alert_msg.setStyleSheet(
+            "font-size:12px; font-weight:600; color:#1A2B3C; border:none;"
+        )
+        self._alert_time = QLabel("")
+        self._alert_time.setStyleSheet("font-size:11px; color:#667085; border:none;")
+
+        alert_lay.addWidget(self._alert_dot)
+        alert_lay.addWidget(self._alert_sev_badge)
+        alert_lay.addWidget(self._alert_msg)
+        alert_lay.addStretch()
+        alert_lay.addWidget(self._alert_time)
+        outer.addWidget(self._alert_banner)
+
+        # Wire warning strip (hidden until 3+ consecutive faults detected)
+        self._wire_warn_frame = QFrame()
+        self._wire_warn_frame.setVisible(False)
+        wire_outer = QHBoxLayout(self._wire_warn_frame)
+        wire_outer.setContentsMargins(14, 6, 14, 6)
+        wire_outer.setSpacing(10)
+
+        wire_icon = QLabel("⚡")
+        wire_icon.setStyleSheet("font-size:16px; border:none;")
+        wire_outer.addWidget(wire_icon)
+
+        self._wire_warn_content = QVBoxLayout()
+        self._wire_warn_content.setSpacing(2)
+        wire_outer.addLayout(self._wire_warn_content)
+        wire_outer.addStretch()
+        outer.addWidget(self._wire_warn_frame)
 
         # 3-column layout
         grid = QWidget()
@@ -221,7 +274,7 @@ class DashboardWindow(QMainWindow):
     # ── Right panel ───────────────────────────────────────────────────────────
     def _build_right_panel(self) -> QWidget:
         w = QWidget()
-        w.setFixedWidth(300)
+        w.setFixedWidth(380)
         lay = QVBoxLayout(w)
         lay.setContentsMargins(0, 0, 0, 0)
         lay.setSpacing(4)
@@ -328,6 +381,51 @@ class DashboardWindow(QMainWindow):
         maint.setMinimumHeight(36)
         lay.addWidget(maint)
 
+        # Wire info section
+        fc_obj = self._fault_mapper.get_fault_code_obj(result.fault_code) if result.fault_code else None
+        if fc_obj and (fc_obj.awg or fc_obj.connector):
+            wire_sep = QFrame()
+            wire_sep.setFrameShape(QFrame.Shape.HLine)
+            wire_sep.setStyleSheet("background:#E0DED8; max-height:1px; border:none;")
+            lay.addWidget(wire_sep)
+
+            wire_hdr = QLabel("전선 점검 정보")
+            wire_hdr.setStyleSheet("font-size:10px; font-weight:700; color:#667085;")
+            lay.addWidget(wire_hdr)
+
+            badge_row = QWidget()
+            badge_lay = QHBoxLayout(badge_row)
+            badge_lay.setContentsMargins(0, 2, 0, 2)
+            badge_lay.setSpacing(6)
+
+            if fc_obj.awg:
+                awg_lbl = QLabel(fc_obj.awg)
+                awg_lbl.setStyleSheet(
+                    "font-size:10px; font-weight:700; color:#185FA5;"
+                    " background:#E6F1FB; border-radius:4px; padding:2px 8px;"
+                )
+                badge_lay.addWidget(awg_lbl)
+
+            if fc_obj.connector:
+                conn_bg, conn_fg = _CONNECTOR_COLORS.get(fc_obj.connector, ("#F4F3EF", "#667085"))
+                conn_lbl = QLabel(fc_obj.connector)
+                conn_lbl.setStyleSheet(
+                    f"font-size:10px; font-weight:700; color:{conn_fg};"
+                    f" background:{conn_bg}; border-radius:4px; padding:2px 8px;"
+                )
+                badge_lay.addWidget(conn_lbl)
+
+            if fc_obj.connector_rated_current:
+                curr_lbl = QLabel(fc_obj.connector_rated_current)
+                curr_lbl.setStyleSheet(
+                    "font-size:10px; color:#667085;"
+                    " background:#F4F3EF; border-radius:4px; padding:2px 8px;"
+                )
+                badge_lay.addWidget(curr_lbl)
+
+            badge_lay.addStretch()
+            lay.addWidget(badge_row)
+
         return card
 
     def _refresh_fault_detail(self):
@@ -383,6 +481,40 @@ class DashboardWindow(QMainWindow):
         for sev, bar in self._sev_bars.items():
             bar.setValue(counts.get(sev, 0))
 
+    def _refresh_alert_banner(self):
+        faults = [r for r in self._results.values() if r.is_fault]
+        if not faults:
+            self._alert_banner.setVisible(False)
+            return
+
+        faults.sort(key=lambda r: list(Severity).index(r.severity), reverse=True)
+        worst = faults[0]
+        sc = _SEV_COLORS.get(worst.severity, "#888")
+        comp = self._components.get(worst.component_id)
+        comp_name = comp.name if comp else worst.component_id
+        ts = self._result_times.get(worst.component_id, "")
+        fault_count = len(faults)
+        code_str = worst.fault_code or "?"
+        extra = f"  외 {fault_count - 1}건 추가 고장" if fault_count > 1 else ""
+
+        self._alert_banner.setStyleSheet(
+            f"QFrame {{ background:{sc}22; border:none;"
+            f" border-left:5px solid {sc}; border-radius:4px; }}"
+        )
+        self._alert_dot.setStyleSheet(
+            f"font-size:18px; font-weight:700; color:{sc}; border:none;"
+        )
+        self._alert_sev_badge.setStyleSheet(
+            f"font-size:11px; font-weight:700; color:#FFFFFF; background:{sc};"
+            f" border-radius:4px; padding:3px 10px; border:none;"
+        )
+        self._alert_sev_badge.setText(worst.severity.value)
+        self._alert_msg.setText(
+            f"{code_str}  —  {comp_name}  |  {worst.state.value}{extra}"
+        )
+        self._alert_time.setText(f"최초 감지: {ts}" if ts else "")
+        self._alert_banner.setVisible(True)
+
     def _flash_pipeline(self):
         _on  = "font-size:9px;color:#FFFFFF;background:#378ADD;border-radius:4px;padding:3px 6px;"
         _off = "font-size:9px;color:#667085;background:#F4F3EF;border-radius:4px;padding:3px 6px;"
@@ -404,6 +536,7 @@ class DashboardWindow(QMainWindow):
         self._log.append_result(result)
         self._refresh_kpi()
         self._refresh_fault_detail()
+        self._refresh_alert_banner()
         self._flash_pipeline()
 
     @Slot(str)
@@ -411,6 +544,38 @@ class DashboardWindow(QMainWindow):
         """연쇄 영향 메시지를 로그 패널에 별도 색상으로 출력"""
         if message:
             self._log.append_impact(message)
+
+    @Slot(object)
+    def on_wire_warning(self, warnings: list):
+        """전선/커넥터 점검 권고 경고 표시."""
+        # 기존 내용 초기화
+        while self._wire_warn_content.count():
+            item = self._wire_warn_content.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
+
+        for w in warnings:
+            parts = []
+            if w["awg"]:
+                parts.append(w["awg"])
+            if w["connector"]:
+                parts.append(w["connector"])
+            if w["rated_current"]:
+                parts.append(w["rated_current"])
+            wire_info = "  /  ".join(parts) if parts else "전선 정보 없음"
+
+            line = QLabel(
+                f"전선 점검 권고  [{w['comp_name']}]  {w['streak']}회 연속 고장 감지"
+                f"  —  {wire_info}  손상 여부 점검 요망"
+            )
+            line.setStyleSheet("font-size:11px; font-weight:600; color:#7A4F00; border:none;")
+            self._wire_warn_content.addWidget(line)
+
+        self._wire_warn_frame.setStyleSheet(
+            "QFrame { background:#FEF3C7; border:none; border-left:5px solid #F59E0B;"
+            " border-radius:4px; }"
+        )
+        self._wire_warn_frame.setVisible(True)
 
     @Slot()
     def on_reset_requested(self):
@@ -420,5 +585,7 @@ class DashboardWindow(QMainWindow):
         self._wiring.reset()
         self._table.reset()
         self._log.append_info("── 전체 초기화 완료 ──")
+        self._wire_warn_frame.setVisible(False)
         self._refresh_kpi()
         self._refresh_fault_detail()
+        self._refresh_alert_banner()

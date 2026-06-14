@@ -79,7 +79,10 @@ class NodeItem(QGraphicsRectItem):
         self._text.setFont(font)
         self._center_text()
         self._badge: Optional[QGraphicsEllipseItem] = None
-        self.set_state(None)
+        if node_id == "PDB":
+            self.set_state_default()
+        else:
+            self.set_state(None)
         self.setZValue(2)
 
     def _center_text(self):
@@ -89,6 +92,15 @@ class NodeItem(QGraphicsRectItem):
             r.x() + (r.width() - br.width()) / 2,
             r.y() + (r.height() - br.height()) / 2,
         )
+
+    def set_state_default(self):
+        """진단 없이 회색(기본) 상태로 표시 — PDB 전용."""
+        bg, border = _NODE_STYLE["default"]
+        self.setBrush(QBrush(QColor(bg)))
+        self.setPen(QPen(QColor(border), 1.8))
+        self._text.setDefaultTextColor(QColor("#1A1A1A"))
+        if self._badge:
+            self._badge.setVisible(False)
 
     def set_state(self, state: Optional[VoltageState], voltage: Optional[float] = None):
         bg, border = _state_style(state)
@@ -159,10 +171,19 @@ class WiringScene(QGraphicsScene):
         node = self._nodes.get(result.component_id)
         if node:
             node.set_state(result.state, result.current_voltage)
+        # PDB는 독립 부품이 없으므로 BAT 상태를 그대로 따라감
+        if result.component_id == "BAT":
+            pdb_node = self._nodes.get("PDB")
+            if pdb_node:
+                pdb_node.set_state(result.state, result.current_voltage)
 
     def reset_nodes(self):
-        for node in self._nodes.values():
-            node.set_state(None)
+        for nid, node in self._nodes.items():
+            # PDB는 진단 대상이 아니므로 기본(회색) 상태로 초기화
+            if nid == "PDB":
+                node.set_state_default()
+            else:
+                node.set_state(None)
 
 
 class DashboardWiringWidget(QWidget):

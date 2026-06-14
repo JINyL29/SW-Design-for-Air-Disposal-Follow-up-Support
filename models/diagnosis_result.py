@@ -33,7 +33,7 @@ class DiagnosisResult:
 
     @property
     def is_fault(self) -> bool:
-        return self.state not in (VoltageState.NORMAL, VoltageState.NO_DATA)
+        return self.state != VoltageState.NORMAL
 
     @property
     def deviation_pct(self) -> Optional[float]:
