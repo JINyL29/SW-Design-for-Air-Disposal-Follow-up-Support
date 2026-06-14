@@ -24,7 +24,6 @@ from csc_07_operator_control_ui.operator_inject_panel import OperatorInjectPanel
 class OperatorWindow(QMainWindow):
     diagnosis_done = Signal(object)   # DiagnosisResult
     reset_requested = Signal()
-    impact_message = Signal(str)      # 연쇄 영향 메시지
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -225,11 +224,6 @@ class OperatorWindow(QMainWindow):
         self._log_op(log_line)
 
         self.diagnosis_done.emit(result)
-
-        impact_msg = self._msg_builder.build_impact_message(result)
-        if impact_msg:
-            self.impact_message.emit(impact_msg)
-
         self._current_scenario = None
 
     @Slot()
@@ -243,9 +237,6 @@ class OperatorWindow(QMainWindow):
             result = self._builder.build(comp, mid, state, severity, fault_code, maintenance)
             self._input_panel.update_result(result)
             self.diagnosis_done.emit(result)
-            impact_msg = self._msg_builder.build_impact_message(result)
-            if impact_msg:
-                self.impact_message.emit(impact_msg)
             log_line = self._msg_builder.build_terminal_log(result)
             print(log_line)
             self._log_op(log_line)

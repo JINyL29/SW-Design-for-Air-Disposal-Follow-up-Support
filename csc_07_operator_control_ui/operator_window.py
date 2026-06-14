@@ -24,6 +24,7 @@ from csc_07_operator_control_ui.operator_inject_panel import OperatorInjectPanel
 class OperatorWindow(QMainWindow):
     diagnosis_done = Signal(object)   # DiagnosisResult
     reset_requested = Signal()
+    impact_message = Signal(str)      # 연쇄 영향 메시지
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -38,6 +39,7 @@ class OperatorWindow(QMainWindow):
         self._maint_mapper = MaintenanceActionMapper(self._fault_mapper)
         self._msg_builder = DecisionMessageBuilder()
         self._current_scenario: Optional[str] = None
+        self._last_diag: dict = {}  # {comp_id: {"voltage": v, "scenario": s}}
 
         self.setWindowTitle("Virtual Fault Injection & Diagnostic Simulation UI")
         self.setMinimumSize(860, 900)
@@ -223,20 +225,40 @@ class OperatorWindow(QMainWindow):
         print(log_line)
         self._log_op(log_line)
 
+        self._last_diag[cid] = {"voltage": voltage, "scenario": scenario}
+
         self.diagnosis_done.emit(result)
+
+        impact_msg = self._msg_builder.build_impact_message(result)
+        if impact_msg:
+            self.impact_message.emit(impact_msg)
+
         self._current_scenario = None
 
     @Slot()
     def _on_run_all(self):
         for comp in sorted(self._components.values(), key=lambda c: c.priority):
-            mid = (comp.voltage_warn_high + comp.voltage_max) / 2
-            state, zone = self._comparator.compare(comp, mid)
+            saved = self._last_diag.get(comp.id)
+            if saved is not None:
+                voltage = saved["voltage"]
+                scenario = saved["scenario"]
+            else:
+                voltage = (comp.voltage_warn_high + comp.voltage_max) / 2
+                scenario = None
+
+            if scenario in ("NO_DATA", "SENSOR_ERROR"):
+                voltage = None
+
+            state, zone = self._comparator.compare(comp, voltage, scenario)
             severity = self._classifier.classify(state, zone)
             fault_code = self._fault_mapper.get_code(comp.id, state)
             maintenance = self._maint_mapper.get_action(fault_code, state)
-            result = self._builder.build(comp, mid, state, severity, fault_code, maintenance)
+            result = self._builder.build(comp, voltage, state, severity, fault_code, maintenance)
             self._input_panel.update_result(result)
             self.diagnosis_done.emit(result)
+            impact_msg = self._msg_builder.build_impact_message(result)
+            if impact_msg:
+                self.impact_message.emit(impact_msg)
             log_line = self._msg_builder.build_terminal_log(result)
             print(log_line)
             self._log_op(log_line)
@@ -246,6 +268,7 @@ class OperatorWindow(QMainWindow):
         self._input_panel.reset()
         self._inject_panel.reset_preview()
         self._current_scenario = None
+        self._last_diag.clear()
         self.reset_requested.emit()
         self._log_op("── 초기화 완료 ──")
 

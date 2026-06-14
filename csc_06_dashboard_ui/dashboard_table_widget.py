@@ -90,6 +90,7 @@ class DashboardTableWidget(QWidget):
         def _item(text: str) -> QTableWidgetItem:
             it = QTableWidgetItem(text)
             it.setTextAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft)
+            it.setForeground(QColor("#1A2B3C"))
             return it
 
         self._table.setItem(row, 0, _item(comp.name))

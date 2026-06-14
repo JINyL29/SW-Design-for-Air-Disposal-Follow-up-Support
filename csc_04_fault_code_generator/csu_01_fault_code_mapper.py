@@ -19,6 +19,7 @@ _COMPONENT_STATE_MAP: Dict[Tuple[str, str], str] = {
     ("TEL", "UNDER_VOLTAGE"): "TEL_UV_001",
     ("TEL", "OVER_VOLTAGE"):  "TEL_OV_001",
     ("BEC", "UNDER_VOLTAGE"): "BEC_UV_001",
+    ("BEC", "OVER_VOLTAGE"):  "BEC_OV_001",
     ("CAM", "UNDER_VOLTAGE"): "Cam_UV_001",
     ("CAM", "OVER_VOLTAGE"):  "Cam_OV_001",
     ("MOT", "UNDER_VOLTAGE"): "PWR_UV_001",

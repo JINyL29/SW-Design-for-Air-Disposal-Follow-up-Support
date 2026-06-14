@@ -406,12 +406,6 @@ class DashboardWindow(QMainWindow):
         self._refresh_fault_detail()
         self._flash_pipeline()
 
-    @Slot(str)
-    def on_impact_message(self, message: str):
-        """연쇄 영향 메시지를 로그 패널에 별도 색상으로 출력"""
-        if message:
-            self._log.append_impact(message)
-
     @Slot()
     def on_reset_requested(self):
         self._results.clear()

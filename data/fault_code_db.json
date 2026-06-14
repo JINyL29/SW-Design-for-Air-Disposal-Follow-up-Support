@@ -89,6 +89,14 @@
       "maintenance_ko": "1. 배터리 전압 및 PDB 연결 확인\n2. BEC 입력 전압 측정\n3. BEC 출력 전압 조정(트리머 또는 설정)\n4. BEC 자체 불량 시 교체\n5. 연결 부품(FC, GPS, TEL) 전압 재측정"
     },
     {
+      "code": "BEC_OV_001",
+      "component_id": "BEC",
+      "fault_type": "OVER_VOLTAGE",
+      "severity": "HIGH",
+      "description_ko": "BEC 출력 전압이 최대 허용치(14.4V) 초과. FC·GPS·텔레메트리 과전압 손상 위험.",
+      "maintenance_ko": "1. 즉시 전원 차단\n2. BEC 출력 전압 조정(트리머 또는 설정값 재확인)\n3. BEC 내부 레귤레이터 불량 여부 점검\n4. 연결 부품(FC, GPS, TEL) 과전압 손상 여부 확인\n5. BEC 불량 확인 시 교체"
+    },
+    {
       "code": "Cam_UV_001",
       "component_id": "CAM",
       "fault_type": "UNDER_VOLTAGE",
