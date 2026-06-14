@@ -60,6 +60,11 @@ class DashboardLogWidget(QWidget):
         )
         self._append_html(html)
 
+    def append_impact(self, message: str):
+        """연쇄 영향 메시지 — 노란색으로 강조 출력"""
+        html = f'<span style="color:#FAC775;font-weight:bold">{message}</span>'
+        self._append_html(html)
+
     def append_info(self, message: str):
         ts_html = f'<span style="color:{_INFO_COLOR}">{message}</span>'
         self._append_html(ts_html)
