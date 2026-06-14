@@ -1,7 +1,7 @@
 [Component Information]
 
-Component Name : UniRC 7 Pro
-Component ID   : telemetry_001
+Component Name : SIYI ZT6 mini
+Component ID   : Camera_002
 
 --------------------------------------------------
 
@@ -10,41 +10,42 @@ Component ID   : telemetry_001
 Parameter Name : Input Voltage
 Unit           : V
 
-Normal Range   : 12 ~ 76 V
-Warning Range  : 11.0 ~ 11.9
-Critical Range : < 11.0
-Critical Range : > 76 V
+Normal Range   : 11.1 ~ 22.1
+Warning Range  : 10.0 ~ 11.0
+Critical Range : < 10.0
+Critical Range : > 22.2
 --------------------------------------------------
 
 [Fault Condition]
 
 Condition 1 :
-IF voltage < 11.9
+IF voltage < 11.1
 
 Fault State :
 Under-voltage
 
 Fault Code :
-telemetry_UV_001
+Cam_UV_002
 
 Severity :
 HIGH
 
 Maintenance Action :
-Check BEC output voltage. Check 16 AWG, XT30
+Check BEC output voltage, 16 AWG, XT30
 
 --------------------------------------------------
 
 Condition 2 :
-IF voltage > 76 V
+IF voltage > 22.2
 
 Fault State :
 Over-voltage 
 
 Fault Code :
-telemetry_OV_001
+Cam_OV_002
 
 Severity :
 HIGH
 
-Maintenance Action :Check BEC output voltage. Check 16 AWG, XT30
+Maintenance Action :
+Check BEC output voltage, 16 AWG, XT30

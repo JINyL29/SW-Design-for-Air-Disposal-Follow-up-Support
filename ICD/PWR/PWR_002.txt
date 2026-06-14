@@ -1,0 +1,30 @@
+[Component Information]
+Component Name 6015 motor
+Component ID  PWR_002
+
+--------------------------------------------------
+
+[Monitoring Parameter]
+Parameter Name  Input Voltage
+Unit  V
+Normal Range  44.4 ~ 51.8
+Warning Range  40.0 ~ 44.3
+Critical Range   40.0
+
+--------------------------------------------------
+
+[Fault Condition]
+Condition 1  IF voltage  44.4
+Fault State  Under-voltage
+Fault Code  PWR_UV_002
+Severity  HIGH
+Maintenance Action 
+Check battery voltage, power cable connection, and voltage drop between battery and ESC.
+
+--------------------------------------------------
+Condition 2  IF voltage  51.8
+Fault State  Over-voltage
+Fault Code  PWR_OV_002
+Severity  HIGH
+Maintenance Action 
+Check battery cell count, charging state, and ESC input voltage compatibility.

@@ -1,7 +1,7 @@
 [Component Information]
 
-Component Name : UniRC 7 Pro
-Component ID   : telemetry_001
+Component Name : HM30
+Component ID   : telemetry_003
 
 --------------------------------------------------
 
@@ -25,7 +25,7 @@ Fault State :
 Under-voltage
 
 Fault Code :
-telemetry_UV_001
+telemetry_UV_003
 
 Severity :
 HIGH
@@ -42,9 +42,10 @@ Fault State :
 Over-voltage 
 
 Fault Code :
-telemetry_OV_001
+telemetry_OV_003
 
 Severity :
 HIGH
 
-Maintenance Action :Check BEC output voltage. Check 16 AWG, XT30
+Maintenance Action :
+Check BEC output voltage. Check 16 AWG, XT30

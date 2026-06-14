@@ -1,6 +1,6 @@
 [Component Information]
-Component Name : Pixhawk CUAV V6X
-Component ID : FC_001
+Component Name : CubePilot Cube Orange+
+Component ID : FC_002
 
 --------------------------------------------------
 
@@ -19,7 +19,7 @@ Maximum input voltage 6V
 Condition 1 :
 IF voltage < 4.75
 Fault State : Under-voltage
-Fault Code : FC_UV_001
+Fault Code : FC_UV_002
 Severity : HIGH
 Maintenance Action : 
 Check BEC output voltage, 24 AWG, GH1.25
@@ -29,7 +29,7 @@ Check BEC output voltage, 24 AWG, GH1.25
 Condition 2 :
 IF voltage > 5.25
 Fault State : Over-voltage
-Fault Code : FC_OV_001
+Fault Code : FC_OV_002
 Severity : HIGH
 Maintenance Action :
 Inspect voltage regulator output, 24 AWG, GH1.25

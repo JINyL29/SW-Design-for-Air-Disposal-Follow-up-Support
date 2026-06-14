@@ -1,35 +1,33 @@
 [Component Information]
-Component Name : Pixhawk CUAV V6X
-Component ID : FC_001
+Component Name : Hobbywing UBEC
+Component ID : BEC_001
 
 --------------------------------------------------
 
 [Monitoring Parameter]
 Parameter Name : Input Voltage
 Unit : V
-Normal Range 4.75 ~ 5.45
-Warning Range 4.50 ~ 4.74
-Critical Range < 4.50
-USB Input Voltage 4.75 ~ 5.25V
-Maximum input voltage 6V
+Normal Range 16.5 ~ 80
+Warning Range 16 ~ 16.4
+Critical Range < 16
 
 --------------------------------------------------
 
 [Fault Condition]
 Condition 1 :
-IF voltage < 4.75
+IF voltage < 16
 Fault State : Under-voltage
-Fault Code : FC_UV_001
+Fault Code : BEC_UV_001
 Severity : HIGH
 Maintenance Action : 
-Check BEC output voltage, 24 AWG, GH1.25
+Check Bettery sell output voltage. Check 14 AWG, XT90
 
 --------------------------------------------------
 
 Condition 2 :
-IF voltage > 5.25
+IF voltage > 80
 Fault State : Over-voltage
-Fault Code : FC_OV_001
+Fault Code : BEC_OV_001
 Severity : HIGH
 Maintenance Action :
-Inspect voltage regulator output, 24 AWG, GH1.25
+Check Bettery sell output voltage. Check 14 AWG, XT90
