@@ -1,6 +1,35 @@
 # Builds human-readable decision messages from a DiagnosisResult
 from models.diagnosis_result import DiagnosisResult, VoltageState, Severity
 
+# ── 배선도 토폴로지 영향 맵 ────────────────────────────────────────────────────
+# 실선(전력선) 기준 양방향 영향 맵
+#
+# upstream  : 나에게 전력을 주는 쪽 → 고장 원인일 수 있으므로 확인
+# downstream: 내가 전력을 주는 쪽  → 내 이상으로 피해받으므로 확인
+#
+# 배선도 실선 엣지:
+#   BAT → PDB → ESC
+#              → BEC → FC  → GPS
+#                    → TEL
+#                    → CAM
+
+_UPSTREAM_IMPACT = {
+    "PDB": ["BAT"],
+    "BEC": ["PDB"],
+    "ESC": ["PDB"],
+    "FC":  ["BEC"],
+    "TEL": ["BEC"],
+    "CAM": ["BEC"],
+    "GPS": ["FC"],
+}
+
+_DOWNSTREAM_IMPACT = {
+    "BAT": ["PDB"],
+    "PDB": ["ESC", "BEC"],
+    "BEC": ["FC", "TEL", "CAM"],
+    "FC":  ["GPS"],
+}
+
 _STATE_KO = {
     VoltageState.NORMAL:        "정상",
     VoltageState.UNDER_VOLTAGE: "저전압",
@@ -41,3 +70,30 @@ class DecisionMessageBuilder:
 
     def state_ko(self, result: DiagnosisResult) -> str:
         return _STATE_KO.get(result.state, result.state.value)
+
+    def build_impact_message(self, result: DiagnosisResult) -> str:
+        """
+        고장 부품의 연쇄 영향 메시지 생성.
+        정상(NORMAL) 상태면 빈 문자열 반환.
+
+        예시:
+          BEC 저전압 → "⚠ BEC 이상 감지 → 직접 영향: FC, Telemetry, CAM 전압 확인 필요"
+          FC 과전압  → "⚠ FC 이상 감지 → 직접 영향: GPS | 신호 영향: TEL, ESC 동작 확인 필요"
+        """
+        if result.state == VoltageState.NORMAL:
+            return ""
+
+        cid = result.component_id
+        upstream   = _UPSTREAM_IMPACT.get(cid, [])
+        downstream = _DOWNSTREAM_IMPACT.get(cid, [])
+
+        if not upstream and not downstream:
+            return ""
+
+        parts = []
+        if upstream:
+            parts.append(f"전력 공급원 확인 필요: {chr(44).join(upstream)}")
+        if downstream:
+            parts.append(f"영향 부품 확인 필요: {chr(44).join(downstream)}")
+
+        return f"⚠ {cid} 이상 감지 → " + " | ".join(parts)
