@@ -1,0 +1,124 @@
+{
+  "fault_codes": [
+    {
+      "code": "BAT_UV_001",
+      "component_id": "BAT",
+      "fault_type": "UNDER_VOLTAGE",
+      "severity": "CRITICAL",
+      "description_ko": "배터리 전압이 임계값(38V) 이하로 하강. 즉각 착륙 및 전원 차단 필요.",
+      "maintenance_ko": "1. 드론 즉시 착륙 조치\n2. 배터리 전압 멀티미터로 측정\n3. 배터리 충전 상태 및 셀 밸런싱 확인\n4. 배터리 외관 검사(부풀음·균열)\n5. 반복 발생 시 배터리 교체"
+    },
+    {
+      "code": "BAT_OV_001",
+      "component_id": "BAT",
+      "fault_type": "OVER_VOLTAGE",
+      "severity": "CRITICAL",
+      "description_ko": "배터리 전압이 최대 허용치(51.8V) 초과. 과충전 또는 충전기 오작동 가능성.",
+      "maintenance_ko": "1. 즉시 충전 중단 및 드론 전원 차단\n2. 배터리를 안전한 환경(모래함 등)으로 이동\n3. 충전기 전압 설정값 재확인\n4. BMS 동작 상태 점검\n5. 배터리 외관 검사 후 전문가 판단 하 재사용 여부 결정"
+    },
+    {
+      "code": "ESC_UV_001",
+      "component_id": "ESC",
+      "fault_type": "UNDER_VOLTAGE",
+      "severity": "CRITICAL",
+      "description_ko": "ESC 입력 전압이 임계값(40V) 이하. 모터 비정상 동작 및 추력 손실 우려.",
+      "maintenance_ko": "1. 드론 즉시 착륙\n2. 배터리 전압 및 방전 상태 확인\n3. PDB → ESC 전원 배선 연결 상태 점검\n4. ESC 커넥터 핀 및 납땜 상태 확인\n5. ESC 자체 불량 여부 점검 후 교체"
+    },
+    {
+      "code": "ESC_OV_001",
+      "component_id": "ESC",
+      "fault_type": "OVER_VOLTAGE",
+      "severity": "HIGH",
+      "description_ko": "ESC 입력 전압이 정격 범위를 초과. ESC 내부 회로 손상 위험.",
+      "maintenance_ko": "1. 전원 차단 후 배터리 분리\n2. 배터리 규격(셀 수) 재확인\n3. ESC 정격 전압 범위 확인\n4. ESC 열화 및 손상 여부 점검\n5. 필요 시 ESC 교체"
+    },
+    {
+      "code": "FC_UV_001",
+      "component_id": "FC",
+      "fault_type": "UNDER_VOLTAGE",
+      "severity": "HIGH",
+      "description_ko": "비행 컨트롤러 공급 전압 이상(4.75V 미만). FC 오작동 및 제어 불안정 우려.",
+      "maintenance_ko": "1. BEC 출력 전압 측정(정격 5V 확인)\n2. FC 전원 입력 커넥터 및 케이블 점검\n3. BEC 불량 여부 확인 후 교체\n4. FC 전원 입력 필터 커패시터 상태 점검"
+    },
+    {
+      "code": "FC_OV_001",
+      "component_id": "FC",
+      "fault_type": "OVER_VOLTAGE",
+      "severity": "CRITICAL",
+      "description_ko": "FC 공급 전압이 최대 허용치(5.45V) 초과. FC 보드 손상 위험.",
+      "maintenance_ko": "1. 즉시 전원 차단\n2. BEC 출력 전압 조정 또는 교체\n3. FC 보드 육안 검사(부품 발열·손상)\n4. FC 기능 점검 후 필요 시 교체"
+    },
+    {
+      "code": "GPS_UV_001",
+      "component_id": "GPS",
+      "fault_type": "UNDER_VOLTAGE",
+      "severity": "HIGH",
+      "description_ko": "GPS 모듈 공급 전압 이상(4.75V 미만). 위치 정확도 저하 및 GPS 락 해제 가능.",
+      "maintenance_ko": "1. FC 5V 출력 전압 측정\n2. GPS 연결 케이블 및 커넥터 점검\n3. GPS 모듈 전원 필터 점검\n4. 반복 발생 시 GPS 모듈 교체"
+    },
+    {
+      "code": "GPS_OV_001",
+      "component_id": "GPS",
+      "fault_type": "OVER_VOLTAGE",
+      "severity": "CRITICAL",
+      "description_ko": "GPS 모듈에 과전압 공급(5.25V 초과). 모듈 영구 손상 위험.",
+      "maintenance_ko": "1. 즉시 전원 차단\n2. FC 5V 레귤레이터 전압 점검\n3. GPS 모듈 손상 여부 확인\n4. 손상 확인 시 GPS 모듈 교체"
+    },
+    {
+      "code": "TEL_UV_001",
+      "component_id": "TEL",
+      "fault_type": "UNDER_VOLTAGE",
+      "severity": "HIGH",
+      "description_ko": "텔레메트리 공급 전압 이상(12V 미만). 지상국 통신 두절 위험.",
+      "maintenance_ko": "1. BEC 출력 전압 확인\n2. 텔레메트리 전원 커넥터 및 케이블 점검\n3. 전압 확인 후 정상이면 텔레메트리 모듈 교체 검토"
+    },
+    {
+      "code": "TEL_OV_001",
+      "component_id": "TEL",
+      "fault_type": "OVER_VOLTAGE",
+      "severity": "HIGH",
+      "description_ko": "텔레메트리 공급 전압이 최대 허용치(76V) 초과. 통신 모듈 손상 가능.",
+      "maintenance_ko": "1. 전원 차단 후 전압 공급원 확인\n2. 텔레메트리 모듈 손상 여부 점검\n3. 필요 시 모듈 교체"
+    },
+    {
+      "code": "BEC_UV_001",
+      "component_id": "BEC",
+      "fault_type": "UNDER_VOLTAGE",
+      "severity": "CRITICAL",
+      "description_ko": "BEC 출력 전압 이상(11.8V 미만). FC·GPS·텔레메트리 연쇄 전원 오류 위험.",
+      "maintenance_ko": "1. 배터리 전압 및 PDB 연결 확인\n2. BEC 입력 전압 측정\n3. BEC 출력 전압 조정(트리머 또는 설정)\n4. BEC 자체 불량 시 교체\n5. 연결 부품(FC, GPS, TEL) 전압 재측정"
+    },
+    {
+      "code": "Cam_UV_001",
+      "component_id": "CAM",
+      "fault_type": "UNDER_VOLTAGE",
+      "severity": "HIGH",
+      "description_ko": "카메라/짐벌 공급 전압 이상(11.1V 미만). 짐벌 안정화 기능 저하 및 촬영 중단 가능.",
+      "maintenance_ko": "1. 짐벌 전원 연결 케이블 점검\n2. 전원 공급원(BEC 또는 배터리) 전압 확인\n3. 짐벌 전원 입력 보호 회로 점검\n4. 반복 발생 시 전원 공급 계통 교체"
+    },
+    {
+      "code": "Cam_OV_001",
+      "component_id": "CAM",
+      "fault_type": "OVER_VOLTAGE",
+      "severity": "HIGH",
+      "description_ko": "카메라/짐벌에 과전압 공급(22.2V 초과). 짐벌 전자 회로 손상 위험.",
+      "maintenance_ko": "1. 즉시 전원 차단\n2. 짐벌 전원 공급 전압 확인 및 조정\n3. 짐벌 모듈 손상 여부 점검\n4. 손상 확인 시 짐벌 교체"
+    },
+    {
+      "code": "PWR_UV_001",
+      "component_id": "MOT",
+      "fault_type": "UNDER_VOLTAGE",
+      "severity": "CRITICAL",
+      "description_ko": "모터 구동 전압 이상(40V 미만). 추력 저하 및 비행 불안정 위험.",
+      "maintenance_ko": "1. 드론 즉시 착륙\n2. 배터리 전압 및 방전 상태 확인\n3. PDB → ESC → 모터 배선 점검\n4. ESC 및 모터 커넥터 상태 확인\n5. 반복 발생 시 배터리 또는 ESC 교체"
+    },
+    {
+      "code": "PWR_OV_001",
+      "component_id": "MOT",
+      "fault_type": "OVER_VOLTAGE",
+      "severity": "HIGH",
+      "description_ko": "모터 구동 전압이 정격 범위를 초과. 모터 및 ESC 손상 위험.",
+      "maintenance_ko": "1. 전원 차단 후 배터리 분리\n2. 배터리 셀 수 및 규격 재확인\n3. 모터 및 ESC 열화 상태 점검\n4. 필요 시 배터리 규격 변경 또는 ESC/모터 교체"
+    }
+  ]
+}
