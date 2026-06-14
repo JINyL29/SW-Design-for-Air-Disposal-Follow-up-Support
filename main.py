@@ -33,6 +33,7 @@ def main():
 
     operator.diagnosis_done.connect(dashboard.on_diagnosis_done)
     operator.reset_requested.connect(dashboard.on_reset_requested)
+    operator.impact_message.connect(dashboard.on_impact_message)
 
     # Position windows: simulation UI on left, dashboard fills remaining space
     screen = app.primaryScreen().availableGeometry()
